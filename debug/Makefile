@@ -1,5 +1,5 @@
 DOCKER?= docker
-VERSION?= 1.0
+VERSION?= 1.1
 NAME?= stoned/ebug
 all: build
 build: FORCE

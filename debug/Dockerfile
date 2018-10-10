@@ -7,8 +7,10 @@ RUN yum install -y epel-release && \
      ftp \
      httping \
      iperf3 \
+     iproute \
      jq \
      lsof \
+     net-tools \
      nmap \
      openssh-clients \
      screen \
