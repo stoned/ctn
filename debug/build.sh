@@ -1,9 +1,12 @@
 #!/bin/sh -
 set -e
 
+: ${HTTP_ECHO_TAG:=0.2.3}
+: ${CENTOS_TAG:=centos7.6.1810}
+
 target_name="${1:-stoned/ebug}"
 
-target=$(buildah from docker://docker.io/centos:latest)
+target=$(buildah from docker://docker.io/centos:$CENTOS_TAG)
 
 buildah run $target -- sh -c 'yum install -y epel-release && \
   yum install -y \
@@ -33,7 +36,7 @@ buildah run $target -- sh -c 'yum install -y epel-release && \
 buildah run $target -- sh -c 'echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
   useradd -G wheel user'
 
-http_echo=$(buildah from docker.io/hashicorp/http-echo:latest)
+http_echo=$(buildah from docker.io/hashicorp/http-echo:$HTTP_ECHO_TAG)
 http_echo_mnt=$(buildah mount $http_echo)
 
 buildah copy $target $http_echo_mnt/http-echo /bin
