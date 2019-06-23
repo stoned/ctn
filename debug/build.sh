@@ -6,7 +6,7 @@ target_name="${1:-stoned/ebug}"
 target=$(buildah from docker://docker.io/centos:latest)
 
 buildah run $target -- sh -c 'yum install -y epel-release && \
-    yum install -y \
+  yum install -y \
      bc \
      bind-utils \
      curl \
@@ -28,10 +28,10 @@ buildah run $target -- sh -c 'yum install -y epel-release && \
      tmux \
      traceroute \
      wget \
-     && \
-    yum clean all'
+  && yum clean all'
+
 buildah run $target -- sh -c 'echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel && \
-    useradd -G wheel user'
+  useradd -G wheel user'
 
 http_echo=$(buildah from docker.io/hashicorp/http-echo:latest)
 http_echo_mnt=$(buildah mount $http_echo)
