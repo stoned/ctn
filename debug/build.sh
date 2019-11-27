@@ -2,7 +2,8 @@
 set -e
 
 : ${HTTP_ECHO_TAG:=0.2.3}
-: ${CENTOS_TAG:=centos7.6.1810}
+: ${CENTOS_TAG:=centos7.7.1908}
+: ${TINI_VERSION:=0.18.0}
 
 target_name="${1:-stoned/ebug}"
 
@@ -13,6 +14,7 @@ buildah run $target -- sh -c 'yum install -y epel-release && \
      bc \
      bind-utils \
      curl \
+     fio \
      ftp \
      httping \
      iperf3 \
@@ -41,9 +43,13 @@ http_echo_mnt=$(buildah mount $http_echo)
 
 buildah copy $target $http_echo_mnt/http-echo /bin
 
+buildah add $target https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-amd64 /sbin/tini
+
+buildah run $target -- sh -c 'chmod 755 /sbin/tini'
+
 buildah config --user user $target
-buildah config --entrypoint /bin/bash $target
-buildah config --cmd '' $target
+buildah config --entrypoint '["/sbin/tini", "--"]' $target
+buildah config --cmd '/bin/bash' $target
 
 buildah umount $http_echo
 buildah umount $target

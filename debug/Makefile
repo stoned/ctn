@@ -1,4 +1,4 @@
 NAME?= stoned/ebug
-VERSION?= 1.3
+VERSION?= 1.4
 
 include ../mk/common.mk
